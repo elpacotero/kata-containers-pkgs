@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: MIT
+version = 3
+
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-gpu-snp"]
+runtime_type = "io.containerd.kata.v2"
+runtime_path = "/opt/kata/bin/containerd-shim-kata-v2"
+snapshotter = "nydus-for-kata-tee"
+privileged_without_host_devices = true
+pod_annotations = ["io.katacontainers.*"]
+container_annotations = ["io.katacontainers.*"]
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-gpu-snp".options]
+ConfigPath = "/opt/kata/share/defaults/kata-containers/configuration-nvidia-gpu-snp.toml"
+
+[plugins."io.containerd.cri.v1.images".runtime_platforms."kata-nvidia-gpu-snp"]
+snapshotter = "nydus-for-kata-tee"
+
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-gpu-tdx"]
+runtime_type = "io.containerd.kata.v2"
+runtime_path = "/opt/kata/bin/containerd-shim-kata-v2"
+snapshotter = "nydus-for-kata-tee"
+privileged_without_host_devices = true
+pod_annotations = ["io.katacontainers.*"]
+container_annotations = ["io.katacontainers.*"]
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-gpu-tdx".options]
+ConfigPath = "/opt/kata/share/defaults/kata-containers/configuration-nvidia-gpu-tdx.toml"
+
+[plugins."io.containerd.cri.v1.images".runtime_platforms."kata-nvidia-gpu-tdx"]
+snapshotter = "nydus-for-kata-tee"
+
+[plugins."io.containerd.cri.v1.images"]
+disable_snapshot_annotations = false
+
+[proxy_plugins."nydus-for-kata-tee"]
+type = "snapshot"
+address = "/run/nydus-for-kata-tee/containerd-nydus-grpc.sock"
+[proxy_plugins."nydus-for-kata-tee".exports]
+root = "/var/lib/nydus-for-kata-tee"

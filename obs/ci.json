@@ -1,0 +1,38 @@
+{
+  "channels": {
+    "release": {
+      "project": "home:elpacotero",
+      "package": "kata-containers"
+    },
+    "development": {
+      "project": "home:elpacotero:development",
+      "package": "kata-containers"
+    }
+  },
+  "targets": [
+    {
+      "id": "ubuntu-26.04-x86_64",
+      "repository": "Ubuntu_26.04",
+      "arch": "x86_64",
+      "format": "deb"
+    },
+    {
+      "id": "ubuntu-26.04-aarch64",
+      "repository": "Ubuntu_26.04",
+      "arch": "aarch64",
+      "format": "deb"
+    },
+    {
+      "id": "almalinux-10.2-x86_64",
+      "repository": "AlmaLinux_10.2",
+      "arch": "x86_64",
+      "format": "rpm"
+    },
+    {
+      "id": "almalinux-10.2-aarch64",
+      "repository": "AlmaLinux_10.2",
+      "arch": "aarch64",
+      "format": "rpm"
+    }
+  ]
+}
