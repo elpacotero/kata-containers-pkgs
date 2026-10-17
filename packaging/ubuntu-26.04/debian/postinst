@@ -1,0 +1,22 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+set -eu
+
+# The Ubuntu package may leave this absent. Containerd needs a main config
+# before it can load conf.d. Never replace an existing administrator config.
+if [ "$1" = configure ] && command -v containerd >/dev/null 2>&1 && [ ! -e /etc/containerd/config.toml ] && [ ! -L /etc/containerd/config.toml ]; then
+    install -d -m0755 /etc/containerd
+    kata_config_temp=$(mktemp /etc/containerd/.kata-config.XXXXXX)
+    trap 'rm -f "$kata_config_temp"' EXIT HUP INT TERM
+    printf 'version = 3\nimports = ["/etc/containerd/conf.d/*.toml"]\n' > "$kata_config_temp"
+    chmod 0644 "$kata_config_temp"
+    # A hard link creates the destination only if it is still absent.
+    ln "$kata_config_temp" /etc/containerd/config.toml || [ -e /etc/containerd/config.toml ]
+    rm -f "$kata_config_temp"
+    trap - EXIT HUP INT TERM
+fi
+
+if [ "$1" = configure ]; then
+    /usr/libexec/kata-containers/load-modules --all-installed ||
+        echo 'Kata: module loading incomplete; boot-time configuration is installed. Run load-modules before workloads.' >&2
+fi

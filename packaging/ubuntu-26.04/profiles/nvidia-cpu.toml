@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: MIT
+# Installed by the corresponding profile package, never by the base package.
+version = 3
+
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-cpu"]
+runtime_type = "io.containerd.kata.v2"
+runtime_path = "/opt/kata/bin/containerd-shim-kata-v2"
+snapshotter = "erofs"
+privileged_without_host_devices = true
+pod_annotations = ["io.katacontainers.*"]
+container_annotations = ["io.katacontainers.*"]
+
+[plugins."io.containerd.cri.v1.runtime".containerd.runtimes."kata-nvidia-cpu".options]
+ConfigPath = "/opt/kata/share/defaults/kata-containers/configuration-nvidia-cpu.toml"
+
+[plugins."io.containerd.cri.v1.images"]
+disable_snapshot_annotations = false
+discard_unpacked_layers = false
+
+[plugins."io.containerd.cri.v1.images".runtime_platforms."kata-nvidia-cpu"]
+snapshotter = "erofs"
+
+[plugins."io.containerd.service.v1.diff-service"]
+default = ["erofs", "walking"]
+
+[plugins."io.containerd.snapshotter.v1.erofs"]
+default_size = "0"
+dmverity_mode = "on"
+enable_fsverity = false
+set_immutable = true
+
+[plugins."io.containerd.differ.v1.erofs"]
+enable_dmverity = true
+mkfs_options = ["-T0", "--mkfs-time", "--sort=none"]
+enable_tar_index = false
