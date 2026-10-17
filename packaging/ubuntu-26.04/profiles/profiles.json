@@ -1,0 +1,59 @@
+{
+  "qemu": {
+    "architectures": [
+      "amd64",
+      "arm64"
+    ],
+    "handler": "kata-qemu",
+    "extra_dependencies": [
+      "kata-containers-rootfs-generic (= ${binary:Version})",
+      "kata-containers-kernel-generic (= ${binary:Version})",
+      "kata-containers-virtiofsd (= ${binary:Version})"
+    ],
+    "assets": "QEMU, firmware, configuration and containerd registration",
+    "modules": [
+      "vhost_vsock"
+    ]
+  },
+  "nvidia-cpu": {
+    "architectures": [
+      "amd64",
+      "arm64"
+    ],
+    "handler": "kata-nvidia-cpu",
+    "extra_dependencies": [
+      "kata-containers-rootfs-nvidia (= ${binary:Version})",
+      "kata-containers-kernel-nvidia (= ${binary:Version})",
+      "erofs-utils (>= 1.8.2)"
+    ],
+    "assets": "QEMU without shared filesystems, NVIDIA CPU configuration and containerd EROFS registration",
+    "modules": [
+      "vhost_vsock",
+      "erofs",
+      "loop",
+      "dm_mod",
+      "dm_verity"
+    ],
+    "minimum_containerd": "2.3.0",
+    "snapshotter": "erofs"
+  },
+  "nvidia-gpu": {
+    "architectures": [
+      "amd64",
+      "arm64"
+    ],
+    "handler": "kata-nvidia-gpu",
+    "extra_dependencies": [
+      "kata-containers-nvidia-cpu (= ${binary:Version})",
+      "kata-containers-rootfs-nvidia-gpu (= ${binary:Version})"
+    ],
+    "assets": "NVIDIA GPU configuration, private UEFI firmware and containerd EROFS registration",
+    "modules": [
+      "vfio",
+      "vfio_pci",
+      "iommufd"
+    ],
+    "minimum_containerd": "2.3.0",
+    "snapshotter": "erofs"
+  }
+}

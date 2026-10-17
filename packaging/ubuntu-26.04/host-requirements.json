@@ -1,0 +1,4 @@
+{
+  "amd64": {"required": ["vhost", "vhost_net", "overlay"], "optional": ["kvm"]},
+  "arm64": {"required": ["kvm", "vhost", "vhost_net", "overlay"], "optional": []}
+}

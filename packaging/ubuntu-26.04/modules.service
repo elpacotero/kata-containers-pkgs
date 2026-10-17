@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: MIT
+[Unit]
+Description=Load Kata Containers host modules
+After=systemd-modules-load.service
+Before=containerd.service k3s.service k3s-agent.service rke2-server.service rke2-agent.service k0scontroller.service k0sworker.service snap.microk8s.daemon-containerd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/kata-containers/load-modules --all-installed
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,92 @@
+# SPDX-License-Identifier: MIT
+name: Development
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      prepare_sources:
+        description: Download upstream payloads and generate OBS sources without submitting
+        type: boolean
+        default: false
+      smoke_filter:
+        description: Optional target or target/distro filter for diagnosis; does not mark the full build tested
+        type: string
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: kata-development
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.event_name != 'schedule' || vars.DEVELOPMENT_SCHEDULE_ENABLED != 'false'
+    name: Package successful upstream main payload on OBS
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    environment: development
+    permissions:
+      contents: read
+    outputs:
+      builds_ready: ${{ steps.obs.outputs.builds_ready }}
+      matrix: ${{ steps.obs.outputs.matrix }}
+      full_smoke: ${{ steps.obs.outputs.full_smoke }}
+    env:
+      OBS_ENABLED: ${{ vars.OBS_ENABLED || 'false' }}
+      SMOKE_ENABLED: ${{ vars.SMOKE_ENABLED || 'false' }}
+      OBS_TARGETS_JSON: ${{ vars.OBS_TARGETS_JSON }}
+      OBS_API_URL: ${{ vars.OBS_API_URL || 'https://api.opensuse.org' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check coordinator behavior
+        run: python3 -m unittest discover -s tests -v
+      - name: Select successful upstream build, submit, and wait for OBS
+        id: obs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPSTREAM_GITHUB_TOKEN: ${{ secrets.UPSTREAM_GITHUB_TOKEN }}
+          PREPARE_SOURCES: ${{ inputs.prepare_sources || false }}
+          SMOKE_FILTER: ${{ inputs.smoke_filter }}
+          OBS_USERNAME: ${{ secrets.OBS_USERNAME }}
+          OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
+        run: |
+          args=()
+          if [ "$PREPARE_SOURCES" = true ]; then args+=(--prepare); fi
+          python3 scripts/ci.py development --output out "${args[@]}"
+      - name: Keep exact build request and OBS receipt
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: development-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/
+          retention-days: 14
+  smoke:
+    needs: build
+    if: needs.build.outputs.builds_ready == 'true'
+    uses: ./.github/workflows/smoke.yml
+    with:
+      channel: development
+      matrix: ${{ needs.build.outputs.matrix }}
+    secrets: inherit
+  complete:
+    name: Record tested development build and remove older workflow artifacts
+    needs: [build, smoke]
+    if: needs.build.outputs.builds_ready == 'true' && needs.build.outputs.full_smoke == 'true' && needs.smoke.result == 'success'
+    runs-on: ubuntu-24.04
+    environment: development
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: development-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/
+      - name: Complete development update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OBS_USERNAME: ${{ secrets.OBS_USERNAME }}
+          OBS_PASSWORD: ${{ secrets.OBS_PASSWORD }}
+          OBS_API_URL: ${{ vars.OBS_API_URL || 'https://api.opensuse.org' }}
+        run: python3 scripts/ci.py development --finish --output out
