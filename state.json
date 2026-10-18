@@ -33,11 +33,11 @@
       }
     },
     "packaging_repository": "elpacotero/kata-containers-pkgs",
-    "packaging_revision": "66e00cdd77529a10ab95bc12fcb53c97ea5a5506",
-    "packaging_fingerprint": "487790825f687ce283f5de78e096ae6aae76f4383879ce5a685f8fb6152b3410",
-    "package_version": "4.2.0-1",
-    "request_id": "release-39077574984-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
-    "created": "2026-10-17T23:04:23.923003+00:00",
+    "packaging_revision": "8ece2d9b6116ece7b7b892f750c1a9fafc83d5d5",
+    "packaging_fingerprint": "98896b763c1df55cc9922d60d7d5aa8f8b8255b8b53bbac5caba60661cb55322",
+    "package_version": "4.2.0-2",
+    "request_id": "release-39123442180-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
+    "created": "2026-10-18T11:29:39.397731+00:00",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
@@ -63,36 +63,40 @@
         "arch": "aarch64",
         "format": "rpm"
       }
+    ],
+    "profiles": [
+      "qemu",
+      "nvidia-cpu"
     ]
   },
   "obs_build": {
     "schema_version": 1,
-    "request_id": "release-39077574984-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
+    "request_id": "release-39123442180-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
     "project": "home:elpacotero",
-    "package": "kata-containers-4.2.0",
-    "source_md5": "040bfd84b4f2bf5eaa56bcad9e818323",
+    "package": "kata-containers-4.2.0-r2",
+    "source_md5": "d0558688671dc1bfe6e5b31de79c2d36",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
         "repository": "Ubuntu_26.04",
         "arch": "x86_64",
         "format": "deb",
-        "source_md5": "040bfd84b4f2bf5eaa56bcad9e818323",
+        "source_md5": "d0558688671dc1bfe6e5b31de79c2d36",
         "job": {
-          "package": "kata-containers-4.2.0",
-          "rev": "4",
-          "srcmd5": "040bfd84b4f2bf5eaa56bcad9e818323",
-          "versrel": "4.2.0-4",
+          "package": "kata-containers-4.2.0-r2",
+          "rev": "6",
+          "srcmd5": "d0558688671dc1bfe6e5b31de79c2d36",
+          "versrel": "4.2.0-7",
           "bcnt": "1",
-          "readytime": "1792278337",
-          "starttime": "1792278338",
-          "endtime": "1792278385",
+          "readytime": "1792323032",
+          "starttime": "1792323035",
+          "endtime": "1792323092",
           "code": "succeeded",
-          "uri": "http://192.168.134.38:33685",
-          "workerid": "h02-ch1d:20",
+          "uri": "http://192.168.134.35:42157",
+          "workerid": "h02-ch1a:11",
           "hostarch": "x86_64",
           "reason": "source change",
-          "verifymd5": "040bfd84b4f2bf5eaa56bcad9e818323"
+          "verifymd5": "d0558688671dc1bfe6e5b31de79c2d36"
         }
       },
       {
@@ -100,22 +104,22 @@
         "repository": "Ubuntu_26.04",
         "arch": "aarch64",
         "format": "deb",
-        "source_md5": "040bfd84b4f2bf5eaa56bcad9e818323",
+        "source_md5": "d0558688671dc1bfe6e5b31de79c2d36",
         "job": {
-          "package": "kata-containers-4.2.0",
-          "rev": "4",
-          "srcmd5": "040bfd84b4f2bf5eaa56bcad9e818323",
-          "versrel": "4.2.0-4",
+          "package": "kata-containers-4.2.0-r2",
+          "rev": "6",
+          "srcmd5": "d0558688671dc1bfe6e5b31de79c2d36",
+          "versrel": "4.2.0-7",
           "bcnt": "1",
-          "readytime": "1792278338",
-          "starttime": "1792278341",
-          "endtime": "1792278400",
+          "readytime": "1792323033",
+          "starttime": "1792323035",
+          "endtime": "1792323102",
           "code": "succeeded",
-          "uri": "http://192.168.134.11:45167",
-          "workerid": "i01-armsrv1:8",
+          "uri": "http://192.168.134.13:39865",
+          "workerid": "i01-armsrv3:12",
           "hostarch": "aarch64",
           "reason": "source change",
-          "verifymd5": "040bfd84b4f2bf5eaa56bcad9e818323"
+          "verifymd5": "d0558688671dc1bfe6e5b31de79c2d36"
         }
       },
       {
@@ -123,22 +127,22 @@
         "repository": "AlmaLinux_10.2",
         "arch": "x86_64",
         "format": "rpm",
-        "source_md5": "040bfd84b4f2bf5eaa56bcad9e818323",
+        "source_md5": "d0558688671dc1bfe6e5b31de79c2d36",
         "job": {
-          "package": "kata-containers-4.2.0",
-          "rev": "4",
-          "srcmd5": "040bfd84b4f2bf5eaa56bcad9e818323",
-          "versrel": "4.2.0-4",
+          "package": "kata-containers-4.2.0-r2",
+          "rev": "6",
+          "srcmd5": "d0558688671dc1bfe6e5b31de79c2d36",
+          "versrel": "4.2.0-7",
           "bcnt": "1",
-          "readytime": "1792278337",
-          "starttime": "1792278338",
-          "endtime": "1792278418",
+          "readytime": "1792323032",
+          "starttime": "1792323035",
+          "endtime": "1792323131",
           "code": "succeeded",
-          "uri": "http://192.168.134.52:33913",
-          "workerid": "i02-ch1b:13",
+          "uri": "http://192.168.134.50:36373",
+          "workerid": "i01-ch2d:23",
           "hostarch": "x86_64",
           "reason": "source change",
-          "verifymd5": "040bfd84b4f2bf5eaa56bcad9e818323"
+          "verifymd5": "d0558688671dc1bfe6e5b31de79c2d36"
         }
       },
       {
@@ -146,26 +150,26 @@
         "repository": "AlmaLinux_10.2",
         "arch": "aarch64",
         "format": "rpm",
-        "source_md5": "040bfd84b4f2bf5eaa56bcad9e818323",
+        "source_md5": "d0558688671dc1bfe6e5b31de79c2d36",
         "job": {
-          "package": "kata-containers-4.2.0",
-          "rev": "4",
-          "srcmd5": "040bfd84b4f2bf5eaa56bcad9e818323",
-          "versrel": "4.2.0-4",
+          "package": "kata-containers-4.2.0-r2",
+          "rev": "6",
+          "srcmd5": "d0558688671dc1bfe6e5b31de79c2d36",
+          "versrel": "4.2.0-7",
           "bcnt": "1",
-          "readytime": "1792278338",
-          "starttime": "1792278341",
-          "endtime": "1792278509",
+          "readytime": "1792323034",
+          "starttime": "1792323037",
+          "endtime": "1792323199",
           "code": "succeeded",
-          "uri": "http://192.168.134.18:34311",
-          "workerid": "i03-armsrv2:7",
+          "uri": "http://192.168.134.19:36513",
+          "workerid": "armv9:20",
           "hostarch": "aarch64",
           "reason": "source change",
-          "verifymd5": "040bfd84b4f2bf5eaa56bcad9e818323"
+          "verifymd5": "d0558688671dc1bfe6e5b31de79c2d36"
         }
       }
     ]
   },
-  "smoke_revision": "66e00cdd77529a10ab95bc12fcb53c97ea5a5506",
-  "smoke_fingerprint": "728df24e584f08e17b156b29408ca829963a364fa8f7787bbbec36935f9cc57c"
+  "smoke_revision": "8ece2d9b6116ece7b7b892f750c1a9fafc83d5d5",
+  "smoke_fingerprint": "0b0756fbb35721a7ea7ebdf1a5172a7ff3fe335eaa3755537120c0244916286d"
 }
