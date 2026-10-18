@@ -30,14 +30,26 @@
           "size": 998817512,
           "url": "https://api.github.com/repos/kata-containers/kata-containers/actions/artifacts/12097433094/zip"
         }
+      },
+      "auxiliary": {
+        "nydus_snapshotter": {
+          "kind": "release-asset",
+          "id": 398690758,
+          "name": "nydus-snapshotter-v0.15.15-linux-amd64.tar.gz",
+          "digest": "sha256:1fad868290bec5b43aac55229554f4c99ff34f7634f4b6a8873b697365fad999",
+          "size": 23032320,
+          "url": "https://github.com/containerd/nydus-snapshotter/releases/download/v0.15.15/nydus-snapshotter-v0.15.15-linux-amd64.tar.gz",
+          "repository": "containerd/nydus-snapshotter",
+          "version": "v0.15.15"
+        }
       }
     },
     "packaging_repository": "elpacotero/kata-containers-pkgs",
-    "packaging_revision": "8ec5292de4421973f6da7e38e2b68579850a1ba2",
-    "packaging_fingerprint": "4b7740a31cb57834ed5fcd5600ebaf2b8f8cf74abb2337f201c61d6475fcf592",
-    "package_version": "0.0.0-0.39135365680.1",
-    "request_id": "development-39135365680-1-f58ad97e8bb5396bf16f5c700a1ab63568c33510",
-    "created": "2026-10-18T14:18:13.770324+00:00",
+    "packaging_revision": "08131417c4df61aa41ed17fd8ac02c06b1c555c3",
+    "packaging_fingerprint": "68dc85916bbaa0589b8586b73fe28daaf9af220229dadb6a5b175a871cf09228",
+    "package_version": "0.0.0-0.39159127368.1",
+    "request_id": "development-39159127368-1-f58ad97e8bb5396bf16f5c700a1ab63568c33510",
+    "created": "2026-10-18T19:31:18.378958+00:00",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
@@ -67,37 +79,38 @@
     "profiles": [
       "qemu",
       "nvidia-cpu",
-      "nvidia-gpu"
+      "nvidia-gpu",
+      "nvidia-gpu-tee"
     ]
   },
   "obs_build": {
     "schema_version": 1,
-    "request_id": "development-39135365680-1-f58ad97e8bb5396bf16f5c700a1ab63568c33510",
+    "request_id": "development-39159127368-1-f58ad97e8bb5396bf16f5c700a1ab63568c33510",
     "project": "home:elpacotero:development",
     "package": "kata-containers",
-    "source_md5": "777a5ccc757b02769227654716163dde",
+    "source_md5": "cd3274bf862dda12708aae0d1f097f3c",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
         "repository": "Ubuntu_26.04",
         "arch": "x86_64",
         "format": "deb",
-        "source_md5": "777a5ccc757b02769227654716163dde",
+        "source_md5": "cd3274bf862dda12708aae0d1f097f3c",
         "job": {
           "package": "kata-containers",
-          "rev": "21",
-          "srcmd5": "777a5ccc757b02769227654716163dde",
-          "versrel": "0.0.0-21",
+          "rev": "23",
+          "srcmd5": "cd3274bf862dda12708aae0d1f097f3c",
+          "versrel": "0.0.0-23",
           "bcnt": "1",
-          "readytime": "1792333209",
-          "starttime": "1792333216",
-          "endtime": "1792333302",
+          "readytime": "1792352129",
+          "starttime": "1792352133",
+          "endtime": "1792352268",
           "code": "succeeded",
-          "uri": "http://192.168.134.33:36545",
-          "workerid": "i04-ch4c:9",
+          "uri": "http://192.168.134.62:43281",
+          "workerid": "i03-ch1d:15",
           "hostarch": "x86_64",
           "reason": "source change",
-          "verifymd5": "777a5ccc757b02769227654716163dde"
+          "verifymd5": "cd3274bf862dda12708aae0d1f097f3c"
         }
       },
       {
@@ -105,22 +118,22 @@
         "repository": "Ubuntu_26.04",
         "arch": "aarch64",
         "format": "deb",
-        "source_md5": "777a5ccc757b02769227654716163dde",
+        "source_md5": "cd3274bf862dda12708aae0d1f097f3c",
         "job": {
           "package": "kata-containers",
-          "rev": "21",
-          "srcmd5": "777a5ccc757b02769227654716163dde",
-          "versrel": "0.0.0-21",
+          "rev": "23",
+          "srcmd5": "cd3274bf862dda12708aae0d1f097f3c",
+          "versrel": "0.0.0-23",
           "bcnt": "1",
-          "readytime": "1792333208",
-          "starttime": "1792333211",
-          "endtime": "1792333299",
+          "readytime": "1792352115",
+          "starttime": "1792352121",
+          "endtime": "1792352285",
           "code": "succeeded",
-          "uri": "http://192.168.134.12:33145",
-          "workerid": "i01-armsrv2:11",
+          "uri": "http://192.168.134.14:35555",
+          "workerid": "i02-armsrv1:9",
           "hostarch": "aarch64",
           "reason": "source change",
-          "verifymd5": "777a5ccc757b02769227654716163dde"
+          "verifymd5": "cd3274bf862dda12708aae0d1f097f3c"
         }
       },
       {
@@ -128,22 +141,22 @@
         "repository": "AlmaLinux_10.2",
         "arch": "x86_64",
         "format": "rpm",
-        "source_md5": "777a5ccc757b02769227654716163dde",
+        "source_md5": "cd3274bf862dda12708aae0d1f097f3c",
         "job": {
           "package": "kata-containers",
-          "rev": "21",
-          "srcmd5": "777a5ccc757b02769227654716163dde",
-          "versrel": "0.0.0-21",
+          "rev": "23",
+          "srcmd5": "cd3274bf862dda12708aae0d1f097f3c",
+          "versrel": "0.0.0-23",
           "bcnt": "1",
-          "readytime": "1792333209",
-          "starttime": "1792333216",
-          "endtime": "1792333385",
+          "readytime": "1792352129",
+          "starttime": "1792352133",
+          "endtime": "1792352365",
           "code": "succeeded",
-          "uri": "http://192.168.134.69:36471",
-          "workerid": "i04-ch1c:7",
+          "uri": "http://192.168.134.58:40441",
+          "workerid": "i02-ch2d:3",
           "hostarch": "x86_64",
           "reason": "source change",
-          "verifymd5": "777a5ccc757b02769227654716163dde"
+          "verifymd5": "cd3274bf862dda12708aae0d1f097f3c"
         }
       },
       {
@@ -151,26 +164,26 @@
         "repository": "AlmaLinux_10.2",
         "arch": "aarch64",
         "format": "rpm",
-        "source_md5": "777a5ccc757b02769227654716163dde",
+        "source_md5": "cd3274bf862dda12708aae0d1f097f3c",
         "job": {
           "package": "kata-containers",
-          "rev": "21",
-          "srcmd5": "777a5ccc757b02769227654716163dde",
-          "versrel": "0.0.0-21",
+          "rev": "23",
+          "srcmd5": "cd3274bf862dda12708aae0d1f097f3c",
+          "versrel": "0.0.0-23",
           "bcnt": "1",
-          "readytime": "1792333208",
-          "starttime": "1792333211",
-          "endtime": "1792333486",
+          "readytime": "1792352116",
+          "starttime": "1792352121",
+          "endtime": "1792352491",
           "code": "succeeded",
-          "uri": "http://192.168.134.16:40775",
-          "workerid": "i02-armsrv3:5",
+          "uri": "http://192.168.134.14:35389",
+          "workerid": "i02-armsrv1:25",
           "hostarch": "aarch64",
           "reason": "source change",
-          "verifymd5": "777a5ccc757b02769227654716163dde"
+          "verifymd5": "cd3274bf862dda12708aae0d1f097f3c"
         }
       }
     ]
   },
-  "smoke_revision": "8ec5292de4421973f6da7e38e2b68579850a1ba2",
-  "smoke_fingerprint": "a0342127364a6280058f48e9340ca41ef78b047c62dc2d87bf69e2b450aa9f67"
+  "smoke_revision": "06c689aede0421da94a1b43337a17e4932be5452",
+  "smoke_fingerprint": "84e5a6973a17227a10fe7344d0a8e380f4ca95d54069c67f18cc9fa6d91a355c"
 }
