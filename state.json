@@ -3,32 +3,32 @@
     "schema_version": 1,
     "channel": "release",
     "source_repository": "https://github.com/kata-containers/kata-containers.git",
-    "source_ref": "refs/tags/4.2.0",
-    "source_revision": "c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
+    "source_ref": "refs/tags/4.3.0",
+    "source_revision": "bd75006ebc9dea6fcb04d8e5ae4e40a3f9316fbf",
     "upstream": {
       "kind": "release",
       "repository": "kata-containers/kata-containers",
-      "release_id": 389118334,
-      "tag": "4.2.0",
-      "source_revision": "c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
-      "source_ref": "refs/tags/4.2.0",
-      "url": "https://github.com/kata-containers/kata-containers/releases/tag/4.2.0",
+      "release_id": 418846147,
+      "tag": "4.3.0",
+      "source_revision": "bd75006ebc9dea6fcb04d8e5ae4e40a3f9316fbf",
+      "source_ref": "refs/tags/4.3.0",
+      "url": "https://github.com/kata-containers/kata-containers/releases/tag/4.3.0",
       "bundles": {
         "aarch64": {
           "kind": "release-asset",
-          "id": 565688673,
-          "name": "kata-static-4.2.0-arm64.tar.zst",
-          "digest": "sha256:5dd4e9f2d5ea9e6bdfa2f476b3315335b58252366fcda2775a3094fc8fec376b",
-          "size": 653631272,
-          "url": "https://github.com/kata-containers/kata-containers/releases/download/4.2.0/kata-static-4.2.0-arm64.tar.zst"
+          "id": 660468350,
+          "name": "kata-static-4.3.0-arm64.tar.zst",
+          "digest": "sha256:618d477ed3f7561200542ffd0ed076a957355a644cecc55bcca80100ec31b523",
+          "size": 675659617,
+          "url": "https://github.com/kata-containers/kata-containers/releases/download/4.3.0/kata-static-4.3.0-arm64.tar.zst"
         },
         "x86_64": {
           "kind": "release-asset",
-          "id": 565685270,
-          "name": "kata-static-4.2.0-amd64.tar.zst",
-          "digest": "sha256:b828904fa3f1e49ddd7dc799c72cb1503cd1e772d354c3987c8d4189b2a623a8",
-          "size": 996647537,
-          "url": "https://github.com/kata-containers/kata-containers/releases/download/4.2.0/kata-static-4.2.0-amd64.tar.zst"
+          "id": 660459089,
+          "name": "kata-static-4.3.0-amd64.tar.zst",
+          "digest": "sha256:79a77ff015c887da3067110c664c1f9f33fb38a3630dbe88daf4098a63d054d0",
+          "size": 1020913328,
+          "url": "https://github.com/kata-containers/kata-containers/releases/download/4.3.0/kata-static-4.3.0-amd64.tar.zst"
         }
       },
       "auxiliary": {
@@ -45,11 +45,11 @@
       }
     },
     "packaging_repository": "elpacotero/kata-containers-pkgs",
-    "packaging_revision": "08131417c4df61aa41ed17fd8ac02c06b1c555c3",
+    "packaging_revision": "06c689aede0421da94a1b43337a17e4932be5452",
     "packaging_fingerprint": "68dc85916bbaa0589b8586b73fe28daaf9af220229dadb6a5b175a871cf09228",
-    "package_version": "4.2.0-4",
-    "request_id": "release-39159125154-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
-    "created": "2026-10-18T19:31:13.050275+00:00",
+    "package_version": "4.3.0-1",
+    "request_id": "release-39502322729-1-bd75006ebc9dea6fcb04d8e5ae4e40a3f9316fbf",
+    "created": "2026-10-20T21:41:05.500992+00:00",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
@@ -85,32 +85,32 @@
   },
   "obs_build": {
     "schema_version": 1,
-    "request_id": "release-39159125154-1-c7351e797efff8bfc6bd73da0eb1909be12e2cfe",
+    "request_id": "release-39502322729-1-bd75006ebc9dea6fcb04d8e5ae4e40a3f9316fbf",
     "project": "home:elpacotero",
-    "package": "kata-containers-4.2.0-r4",
-    "source_md5": "94af2c3f3bc6c717e2a11b70741e354e",
+    "package": "kata-containers-4.3.0",
+    "source_md5": "020a2173b4e35f1209316a9d7df5139e",
     "targets": [
       {
         "id": "ubuntu-26.04-x86_64",
         "repository": "Ubuntu_26.04",
         "arch": "x86_64",
         "format": "deb",
-        "source_md5": "94af2c3f3bc6c717e2a11b70741e354e",
+        "source_md5": "020a2173b4e35f1209316a9d7df5139e",
         "job": {
-          "package": "kata-containers-4.2.0-r4",
+          "package": "kata-containers-4.3.0",
           "rev": "2",
-          "srcmd5": "94af2c3f3bc6c717e2a11b70741e354e",
-          "versrel": "4.2.0-5",
+          "srcmd5": "020a2173b4e35f1209316a9d7df5139e",
+          "versrel": "4.3.0-2",
           "bcnt": "1",
-          "readytime": "1792352076",
-          "starttime": "1792352081",
-          "endtime": "1792352191",
+          "readytime": "1792532751",
+          "starttime": "1792532756",
+          "endtime": "1792532902",
           "code": "succeeded",
-          "uri": "http://192.168.134.67:33113",
-          "workerid": "i04-ch1a:4",
+          "uri": "http://192.168.134.67:39271",
+          "workerid": "i04-ch1a:2",
           "hostarch": "x86_64",
           "reason": "new build",
-          "verifymd5": "94af2c3f3bc6c717e2a11b70741e354e"
+          "verifymd5": "020a2173b4e35f1209316a9d7df5139e"
         }
       },
       {
@@ -118,22 +118,22 @@
         "repository": "Ubuntu_26.04",
         "arch": "aarch64",
         "format": "deb",
-        "source_md5": "94af2c3f3bc6c717e2a11b70741e354e",
+        "source_md5": "020a2173b4e35f1209316a9d7df5139e",
         "job": {
-          "package": "kata-containers-4.2.0-r4",
+          "package": "kata-containers-4.3.0",
           "rev": "2",
-          "srcmd5": "94af2c3f3bc6c717e2a11b70741e354e",
-          "versrel": "4.2.0-5",
+          "srcmd5": "020a2173b4e35f1209316a9d7df5139e",
+          "versrel": "4.3.0-2",
           "bcnt": "1",
-          "readytime": "1792352068",
-          "starttime": "1792352074",
-          "endtime": "1792352187",
+          "readytime": "1792532695",
+          "starttime": "1792532704",
+          "endtime": "1792532820",
           "code": "succeeded",
-          "uri": "http://192.168.134.12:46111",
-          "workerid": "i01-armsrv2:5",
+          "uri": "http://192.168.134.19:39499",
+          "workerid": "armv9:5",
           "hostarch": "aarch64",
           "reason": "new build",
-          "verifymd5": "94af2c3f3bc6c717e2a11b70741e354e"
+          "verifymd5": "020a2173b4e35f1209316a9d7df5139e"
         }
       },
       {
@@ -141,22 +141,22 @@
         "repository": "AlmaLinux_10.2",
         "arch": "x86_64",
         "format": "rpm",
-        "source_md5": "94af2c3f3bc6c717e2a11b70741e354e",
+        "source_md5": "020a2173b4e35f1209316a9d7df5139e",
         "job": {
-          "package": "kata-containers-4.2.0-r4",
+          "package": "kata-containers-4.3.0",
           "rev": "2",
-          "srcmd5": "94af2c3f3bc6c717e2a11b70741e354e",
-          "versrel": "4.2.0-5",
+          "srcmd5": "020a2173b4e35f1209316a9d7df5139e",
+          "versrel": "4.3.0-2",
           "bcnt": "1",
-          "readytime": "1792352076",
-          "starttime": "1792352081",
-          "endtime": "1792352308",
+          "readytime": "1792532751",
+          "starttime": "1792532756",
+          "endtime": "1792532995",
           "code": "succeeded",
-          "uri": "http://192.168.134.72:35261",
-          "workerid": "i04-ch2b:4",
+          "uri": "http://192.168.134.41:39947",
+          "workerid": "h02-ch2c:23",
           "hostarch": "x86_64",
           "reason": "new build",
-          "verifymd5": "94af2c3f3bc6c717e2a11b70741e354e"
+          "verifymd5": "020a2173b4e35f1209316a9d7df5139e"
         }
       },
       {
@@ -164,22 +164,22 @@
         "repository": "AlmaLinux_10.2",
         "arch": "aarch64",
         "format": "rpm",
-        "source_md5": "94af2c3f3bc6c717e2a11b70741e354e",
+        "source_md5": "020a2173b4e35f1209316a9d7df5139e",
         "job": {
-          "package": "kata-containers-4.2.0-r4",
+          "package": "kata-containers-4.3.0",
           "rev": "2",
-          "srcmd5": "94af2c3f3bc6c717e2a11b70741e354e",
-          "versrel": "4.2.0-5",
+          "srcmd5": "020a2173b4e35f1209316a9d7df5139e",
+          "versrel": "4.3.0-2",
           "bcnt": "1",
-          "readytime": "1792352068",
-          "starttime": "1792352074",
-          "endtime": "1792352368",
+          "readytime": "1792532695",
+          "starttime": "1792532704",
+          "endtime": "1792533049",
           "code": "succeeded",
-          "uri": "http://192.168.134.12:37167",
-          "workerid": "i01-armsrv2:3",
+          "uri": "http://192.168.134.19:34185",
+          "workerid": "armv9:1",
           "hostarch": "aarch64",
           "reason": "new build",
-          "verifymd5": "94af2c3f3bc6c717e2a11b70741e354e"
+          "verifymd5": "020a2173b4e35f1209316a9d7df5139e"
         }
       }
     ]
