@@ -57,6 +57,33 @@ class NvidiaAssets(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing required qemu-no-shared-fs'):
             import_bundle.component_members(index, 'aarch64', ('qemu', 'nvidia-cpu'))
 
+    def test_import_includes_uncompressed_cpu_and_compressed_gpu_kernels(self):
+        base = 'opt/kata/share/kata-containers/'
+        for architecture in ('x86_64', 'aarch64'):
+            with self.subTest(architecture=architecture):
+                index = self.index()
+                if architecture == 'x86_64':
+                    for name in ('opt/kata/bin/qemu-system-x86_64',
+                                 'opt/kata/bin/qemu-system-x86_64-no-shared-fs',
+                                 'opt/kata/share/ovmf/OVMF.fd'):
+                        index[name] = tarfile.TarInfo(name)
+                alias = tarfile.TarInfo(base + 'vmlinux-nvidia-gpu.container')
+                alias.type, alias.linkname = tarfile.SYMTYPE, 'nvidia-uncompressed.kernel'
+                index[alias.name] = alias
+                index[base + alias.linkname] = tarfile.TarInfo(base + alias.linkname)
+                selected = import_bundle.component_members(index, architecture, ('qemu', 'nvidia-cpu'))
+                self.assertEqual(selected['kernel-nvidia-gpu'], {
+                    base + 'vmlinux-nvidia-gpu.container', base + 'nvidia-uncompressed.kernel',
+                    base + 'vmlinuz-nvidia-gpu.container', base + 'nvidia.kernel'})
+
+    def test_uncompressed_cpu_kernel_requires_its_symlink_target(self):
+        index = self.index()
+        alias = tarfile.TarInfo('opt/kata/share/kata-containers/vmlinux-nvidia-gpu.container')
+        alias.type, alias.linkname = tarfile.SYMTYPE, 'missing-uncompressed.kernel'
+        index[alias.name] = alias
+        with self.assertRaisesRegex(ValueError, 'missing required kernel-nvidia-gpu payload: .*missing-uncompressed.kernel'):
+            import_bundle.component_members(index, 'aarch64', ('qemu', 'nvidia-cpu'))
+
     def test_cpu_dependency_closure_does_not_pull_generic_guest_or_virtiofsd(self):
         selected = packages.installed_packages('nvidia-cpu')
         self.assertEqual(set(selected), {'kata-containers-core', 'kata-containers-nvidia-cpu',

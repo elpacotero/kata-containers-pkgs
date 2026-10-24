@@ -57,6 +57,10 @@ def component_members(index, architecture, profiles=("qemu", "nvidia-cpu", "nvid
             'kernel-nvidia-gpu': {base + 'vmlinuz-nvidia-gpu.container'},
             'rootfs-image-nvidia': {base + 'kata-containers-nvidia.img', base + 'root_hash_nvidia.txt'},
         })
+        # Since 4.3.1 NVIDIA CPU uses the uncompressed kernel, while GPU still
+        # uses the compressed one. Older bundles may only provide the latter.
+        if base + 'vmlinux-nvidia-gpu.container' in index:
+            components['kernel-nvidia-gpu'].add(base + 'vmlinux-nvidia-gpu.container')
         components['qemu-no-shared-fs'].update(name for name in index if name.startswith(
             ('opt/kata/share/kata-qemu-no-shared-fs/', 'opt/kata/lib/kata-qemu-no-shared-fs/')))
     if 'nvidia-gpu' in profiles:
