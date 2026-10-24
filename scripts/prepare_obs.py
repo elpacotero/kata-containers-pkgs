@@ -27,6 +27,7 @@ DESCRIPTIONS = {'kata-containers-core': 'Kata Containers Rust shim and host inte
                 'kata-containers-qemu': 'Kata Containers QEMU profile and firmware',
                 'kata-containers-dragonball': 'Kata Containers integrated Dragonball profile',
                 'kata-containers-kernel-dragonball': 'Kata Containers Dragonball guest kernel',
+                'kata-containers-cloud-hypervisor': 'Kata Containers Cloud Hypervisor profile',
                 'kata-containers': 'Kata Containers default QEMU installation',
                 'kata-containers-nvidia-cpu': 'Kata Containers NVIDIA CPU QEMU profile',
                 'kata-containers-rootfs-nvidia': 'Kata Containers NVIDIA base guest root filesystem',
@@ -192,7 +193,9 @@ def prepare(request, output, client=None, root=ROOT):
             bundle = work / ('bundle-' + architecture + '.tar.zst')
             sha = client.download(descriptor, bundle)
             inputs = work / ('inputs-' + architecture)
-            import_bundle(bundle, architecture, request, inputs, sha, license_text)
+            from runtime_config import generate_clh_config
+            import_bundle(bundle, architecture, request, inputs, sha, license_text,
+                          configuration_provider=lambda arch: generate_clh_config(client, request['source_revision'], arch))
             if architecture == 'x86_64' and 'nvidia-gpu-tee' in request.get('profiles', []):
                 from nydus_package import import_snapshotter
                 import_snapshotter(inputs, request, client)

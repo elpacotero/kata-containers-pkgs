@@ -156,7 +156,7 @@ class NativeRecipes(unittest.TestCase):
         self.assertIn('Release: 0.123.1.el10', text)
         self.assertNotIn('docker', text)
         self.assertNotIn('curl', text)
-        self.assertEqual(text.count('%files'), 16)
+        self.assertEqual(text.count('%files'), 17)
         self.assertIn('kata-containers-virtiofsd = %{version}-%{release}', text)
         self.assertIn('--stage-only', text)
 

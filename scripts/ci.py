@@ -31,7 +31,7 @@ def git(*args, cwd=ROOT, data=None, env=None):
 
 PACKAGE_INPUTS = ('config.json', 'LICENSE', 'LICENSES', 'packaging',
                   'scripts/build_request.py', 'scripts/assemble.py', 'scripts/elf_dependencies.py',
-                  'scripts/import_bundle.py', 'scripts/obs_native.py', 'scripts/prepare_obs.py',
+                  'scripts/import_bundle.py', 'scripts/runtime_config.py', 'scripts/obs_native.py', 'scripts/prepare_obs.py',
                   'scripts/rpm_backend.py', 'scripts/nydus_package.py', 'scripts/packages.py', 'scripts/setup.py', 'scripts/stage_profile.py', 'scripts/upstream.py')
 SMOKE_INPUTS = ('.github/workflows/development.yml', '.github/workflows/releases.yml',
                 '.github/workflows/smoke.yml', 'scripts/ci.py', 'scripts/smoke.py',

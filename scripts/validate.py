@@ -145,6 +145,8 @@ def main():
     if args.profile == 'dragonball':
         expected_owners = {'kernel': 'kata-containers-kernel-dragonball',
                     'image': 'kata-containers-rootfs-generic'}
+    if args.profile == 'cloud-hypervisor':
+        expected_owners.update(path='kata-containers-cloud-hypervisor')
     if args.profile.startswith('nvidia-'):
         expected_owners.update(path='kata-containers-nvidia-cpu', kernel='kata-containers-kernel-nvidia',
                                image='kata-containers-rootfs-nvidia')

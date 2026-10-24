@@ -2,7 +2,7 @@
 
 DEB packages for **Ubuntu 26.04** and native RPM packages for **AlmaLinux 10.2**,
 on x86_64 and aarch64. Only the Rust runtime is shipped; public package names do
-not distinguish runtime implementations. Profiles cover generic QEMU, Dragonball, NVIDIA CPU and NVIDIA GPU workloads, including GPU TEEs on x86_64.
+not distinguish runtime implementations. Profiles cover QEMU, Dragonball, Cloud Hypervisor, NVIDIA CPU and NVIDIA GPU workloads, including GPU TEEs on x86_64.
 
 Automated packaging consumes the binaries upstream already builds:
 
@@ -124,6 +124,29 @@ your Kubernetes distribution as described below. Profiles can coexist.
 Packages support x86_64 and aarch64. Ubuntu x86_64 CI runs normal and debug
 kubeadm smoke Pods. ARM64 packages are built; ARM64 and AlmaLinux workloads
 remain outside the hosted smoke matrix.
+
+### Cloud Hypervisor profile
+
+After adding your chosen repository:
+
+```sh
+sudo apt-get install -y kata-containers-cloud-hypervisor  # Ubuntu
+# Or, on AlmaLinux:
+sudo dnf install -y kata-containers-cloud-hypervisor
+```
+
+The profile installs the upstream Cloud Hypervisor binary and its Rust runtime
+configuration, sharing the generic measured rootfs, kernel and virtiofsd packages.
+Use RuntimeClass handler `kata-clh` and run `kata-containers-setup` as described
+below. It can coexist with QEMU and Dragonball.
+
+Packages support x86_64 and aarch64. Ubuntu x86_64 CI runs normal and debug
+kubeadm smoke Pods; ARM64 and AlmaLinux workloads remain outside the hosted
+smoke matrix. When an ARM64 bundle omits the Rust Cloud Hypervisor configuration,
+preparation generates it from that exact upstream commit with
+`ARCH=aarch64 CLHCMD=cloud-hypervisor`. The installed provenance records the
+source hashes and generated configuration hash. All VMM and shim binaries
+remain the verified upstream binaries.
 
 ### NVIDIA CPU profile
 
@@ -258,6 +281,7 @@ virtualization must be available on each node running Kata workloads.
 | `kata-containers-qemu` | QEMU, firmware, configuration and profile-owned containerd registration |
 | `kata-containers-dragonball` | Integrated Dragonball configuration and containerd registration |
 | `kata-containers-kernel-dragonball` | Dedicated upstream experimental Dragonball guest kernel |
+| `kata-containers-cloud-hypervisor` | Cloud Hypervisor binary, configuration and containerd registration |
 | `kata-containers-rootfs-nvidia` | NVIDIA base guest root filesystem |
 | `kata-containers-kernel-nvidia` | NVIDIA guest kernel |
 | `kata-containers-nvidia-cpu` | QEMU without shared filesystems, NVIDIA CPU configuration and EROFS registration |
@@ -301,7 +325,7 @@ binary version remains unchanged. Additional VMMs and ELRepo integration are def
 
 ```sh
 python3 -m unittest discover -s tests -v
-# Requires Python 3.11+, zstd for bundle/source preparation.
+# Requires Python 3.11+, zstd and make for bundle/source preparation.
 ```
 
 Both source recipes have been built locally using a real upstream ARM64

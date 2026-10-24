@@ -32,8 +32,8 @@ class NvidiaGPUTEE(unittest.TestCase):
         self.assertEqual(closure, set(packages.installed_packages('nvidia-gpu')) | {
             'kata-containers-nvidia-gpu-tee', 'kata-containers-rootfs-coco', 'kata-containers-nydus-snapshotter'})
         self.assertEqual(len(closure), 9)
-        self.assertEqual(len(packages.build_packages(architecture='amd64')), 16)
-        self.assertEqual(len(packages.build_packages(architecture='arm64')), 13)
+        self.assertEqual(len(packages.build_packages(architecture='amd64')), 17)
+        self.assertEqual(len(packages.build_packages(architecture='arm64')), 14)
         self.assertNotIn('nvidia-gpu-tee', packages.profiles_for_arch('aarch64'))
         self.assertEqual(packages.profile_handlers('nvidia-gpu-tee'), ['kata-nvidia-gpu-snp', 'kata-nvidia-gpu-tdx'])
 

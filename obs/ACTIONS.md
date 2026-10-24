@@ -26,7 +26,7 @@ replace polling without changing ingestion.
 ## Package preparation
 
 The coordinator verifies the downloaded asset or artifact ZIP digest, extracts
-the Rust tarball, then selects generic QEMU and NVIDIA CPU/GPU assets. On x86_64
+the Rust tarball, then selects QEMU, Dragonball, Cloud Hypervisor and NVIDIA CPU/GPU assets. On x86_64
 it also selects SNP/TDX VMMs and firmware, and the CoCo guest extension. Monolithic
 GPU rootfs images are excluded. Guest image/kernel symlink targets are included.
 Required files, archive paths and link boundaries are checked; imported component
@@ -36,8 +36,19 @@ Dragonball uses the integrated Rust VMM, its dedicated experimental kernel and
 the shared generic guest rootfs on both architectures. Its configuration and
 containerd handler are owned by a separate profile package.
 
+Cloud Hypervisor imports its VMM on both architectures, sharing the generic
+kernel, measured guest rootfs and external virtiofsd. If the ARM64 bundle omits
+`configuration-clh-runtime-rs.toml`, preparation reads the template, Makefile,
+architecture options, version and `utils.mk` at the request's exact upstream
+commit and runs only the configuration target with `ARCH=aarch64`,
+`PREFIX=/opt/kata` and `CLHCMD=cloud-hypervisor`. This needs `make` on the
+preparation runner. Source-file hashes, the command and generated-file hash
+are retained in installed provenance; no shim or VMM is recompiled. Native
+OBS assembly remains offline. Both new profiles bind their generic image
+configuration to the bundled rootfs verity measurement.
+
 The reduced inputs and packaging code become a native Debian source package and
-an RPM spec with sixteen x86_64 packages and thirteen aarch64 packages. Both build offline on OBS. Submission uploads to
+an RPM spec with seventeen x86_64 packages and fourteen aarch64 packages. Both build offline on OBS. Submission uploads to
 a staging revision and commits the complete file list atomically with SHA256
 validation. Old filenames are replaced by that revision. Leave package-level SCM
 Sync empty: large binary inputs are uploaded to OBS, not committed to Git.
@@ -105,7 +116,7 @@ fully tested or prunes previous artifacts. Scheduled runs keep the complete matr
 After all four OBS targets build the matching source MD5, both channels call the
 same reusable smoke workflow. Five generic-QEMU x86_64 jobs cover Ubuntu 26.04 with kubeadm,
 k0s, k3s, MicroK8s and RKE2, directly on separate `ubuntu-26.04` hosted runners.
-An additional Dragonball job tests normal and debug kubeadm Pods on x86_64.
+Additional Dragonball and Cloud Hypervisor jobs test normal and debug kubeadm Pods on x86_64.
 The NVIDIA CPU job installs only that profile and tests kubeadm with the
 latest stable upstream containerd. It verifies effective EROFS/dm-verity settings, normal
 and debug Pods, and uses the `kata-nvidia-cpu` handler.

@@ -39,7 +39,7 @@ class NvidiaGPU(unittest.TestCase):
             'kata-containers-core', 'kata-containers-nvidia-cpu', 'kata-containers-nvidia-gpu',
             'kata-containers-rootfs-nvidia', 'kata-containers-kernel-nvidia',
             'kata-containers-rootfs-nvidia-gpu'})
-        self.assertEqual(len(packages.build_packages()), 16)
+        self.assertEqual(len(packages.build_packages()), 17)
         text = prepare_obs.rpm_spec({'package_version': '4.2.0-3'})
         section = text.split('%package -n kata-containers-nvidia-gpu\n')[1].split('%description')[0]
         self.assertIn('Requires: kata-containers-nvidia-cpu = %{version}-%{release}', section)

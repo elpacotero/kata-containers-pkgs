@@ -25,7 +25,7 @@ def shell(script, env=None):
 def install(distro, output, profile="qemu"):
     if distro not in DISTROS or os.geteuid():
         raise ValueError('select a supported Kubernetes distro and run as root')
-    if profile not in ('qemu', 'dragonball', 'nvidia-cpu') or (profile != 'qemu' and distro != 'kubeadm'):
+    if profile not in ('qemu', 'dragonball', 'cloud-hypervisor', 'nvidia-cpu') or (profile != 'qemu' and distro != 'kubeadm'):
         raise ValueError('additional Kata profiles currently support kubeadm smoke tests only')
     output.mkdir(parents=True, exist_ok=True)
     # Hosts are disposable. Retain the real distribution SELinux policy mode.

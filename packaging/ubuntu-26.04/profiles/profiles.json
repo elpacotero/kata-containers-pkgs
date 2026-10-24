@@ -27,6 +27,19 @@
     "assets": "Integrated Dragonball VMM configuration and containerd registration",
     "modules": ["vhost_vsock"]
   },
+  "cloud-hypervisor": {
+    "architectures": ["amd64", "arm64"],
+    "handler": "kata-clh",
+    "hypervisor": "clh",
+    "upstream_configuration": "configuration-clh-runtime-rs.toml",
+    "extra_dependencies": [
+      "kata-containers-rootfs-generic (= ${binary:Version})",
+      "kata-containers-kernel-generic (= ${binary:Version})",
+      "kata-containers-virtiofsd (= ${binary:Version})"
+    ],
+    "assets": "Cloud Hypervisor VMM, configuration and containerd registration",
+    "modules": ["vhost_vsock"]
+  },
   "nvidia-cpu": {
     "architectures": [
       "amd64",

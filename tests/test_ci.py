@@ -511,8 +511,8 @@ class HostedMatrix(unittest.TestCase):
         import smoke_vm
         targets = json.loads((ci.ROOT / 'obs/ci.json').read_text())['targets']
         matrix = ci.smoke_matrix(targets)['include']
-        self.assertEqual(len(matrix), 9)
-        self.assertEqual(len({(t['id'], t['k8s_distro'], t['profile']) for t in matrix}), 9)
+        self.assertEqual(len(matrix), 10)
+        self.assertEqual(len({(t['id'], t['k8s_distro'], t['profile']) for t in matrix}), 10)
         self.assertTrue(all(t['repository'] == 'Ubuntu_26.04' for t in matrix))
         self.assertTrue(any(t['format'] == 'rpm' for t in targets))
         for target in matrix:
