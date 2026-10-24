@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import tempfile
 import tomllib
-from packages import build_packages, installed_packages, PROFILES, profile_handlers, profile_configurations, profiles_for_arch
+from packages import build_packages, installed_packages, PROFILES, profile_handlers, profile_configurations, profiles_for_arch, profile_hypervisor
 
 HERE = Path(__file__).resolve().parent
 PACKAGES = tuple("kata-containers" + suffix for suffix in (
@@ -129,20 +129,22 @@ def main():
         installed_versions[name] = run("dpkg-query", "-W", "-f=${Version}", name)
         assert installed_versions[name] == version, f"unexpected version: {name}"
         assert not run("dpkg", "--verify", name).strip(), f"installed files changed: {name}"
-    arch = run("dpkg", "--print-architecture").strip()
-    binaries = {"shim": "/opt/kata/bin/containerd-shim-kata-v2",
-                "qemu": "/opt/kata/bin/qemu-system-" + {"arm64": "aarch64", "amd64": "x86_64"}[arch] + ("-no-shared-fs" if args.profile.startswith("nvidia-") else "")}
-    if args.profile == "qemu":
-        binaries["virtiofsd"] = "/opt/kata/libexec/virtiofsd"
+    profile_path = Path('/opt/kata/share/defaults/kata-containers/configuration-' + profile_configurations(args.profile)[0] + '.toml')
+    hypervisor = tomllib.loads(profile_path.read_text())['hypervisor'][profile_hypervisor(args.profile)]
+    binaries = {'shim': '/opt/kata/bin/containerd-shim-kata-v2'}
+    if hypervisor.get('path'):
+        binaries[profile_hypervisor(args.profile)] = hypervisor['path']
+    if hypervisor.get('virtio_fs_daemon') and hypervisor.get('shared_fs') == 'virtio-fs':
+        binaries['virtiofsd'] = hypervisor['virtio_fs_daemon']
     if args.profile == 'nvidia-gpu-tee':
-        binaries['qemu'] = '/opt/kata/bin/qemu-system-x86_64-snp-experimental'
         binaries['qemu-tdx'] = '/opt/kata/bin/qemu-system-x86_64-tdx-experimental'
-    outputs = {name: run(path, "--version").strip() for name, path in binaries.items()}
-    profile_path = Path("/opt/kata/share/defaults/kata-containers/configuration-" + profile_configurations(args.profile)[0] + ".toml")
-    hypervisor = tomllib.loads(profile_path.read_text())["hypervisor"]["qemu"]
+    outputs = {name: run(path, '--version').strip() for name, path in binaries.items()}
     expected_owners = {"path": "kata-containers-qemu", "kernel": "kata-containers-kernel-generic",
                        "image": "kata-containers-rootfs-generic", "virtio_fs_daemon": "kata-containers-virtiofsd",
                        "firmware": "kata-containers-qemu", "firmware_volume": "kata-containers-qemu"}
+    if args.profile == 'dragonball':
+        expected_owners = {'kernel': 'kata-containers-kernel-dragonball',
+                    'image': 'kata-containers-rootfs-generic'}
     if args.profile.startswith('nvidia-'):
         expected_owners.update(path='kata-containers-nvidia-cpu', kernel='kata-containers-kernel-nvidia',
                                image='kata-containers-rootfs-nvidia')

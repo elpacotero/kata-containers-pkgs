@@ -7,6 +7,7 @@ import shlex
 import shutil
 import subprocess
 import tomllib
+from packages import profile_hypervisor
 
 
 def set_debug_level(text, level):
@@ -39,36 +40,39 @@ def verify_kata_config(config, output, debug):
     effective = effective_kata_config(config)
     (output / 'kata-effective-config.json').write_text(json.dumps(effective, indent=2) + '\n')
     level = 'debug' if debug else 'info'
-    sections = (effective['hypervisor']['qemu'], effective['runtime'], effective['agent']['kata'])
+    hypervisor, = effective['hypervisor'].values()
+    sections = (hypervisor, effective['runtime'], effective['agent']['kata'])
     if any(section.get('enable_debug') != debug or section.get('log_level') != level for section in sections):
         raise ValueError('merged Kata configuration has incorrect component debug flags or log levels')
     if effective['agent']['kata'].get('debug_console_enabled', False) != debug:
         raise ValueError('merged Kata agent debug console setting is incorrect')
-    params = effective['hypervisor']['qemu'].get('kernel_params', '').split()
+    params = hypervisor.get('kernel_params', '').split()
     if any((parameter in params) != debug for parameter in ('agent.log=debug', 'initcall_debug')):
         raise ValueError('merged Kata configuration has incorrect guest debug kernel parameters')
 
 
 def configure(distro, output, debug, profile="qemu"):
     level, enabled = ('debug', 'true') if debug else ('info', 'false')
+    hypervisor_name = profile_hypervisor(profile)
+    section = 'hypervisor.' + hypervisor_name
     config = Path('/opt/kata/share/defaults/kata-containers/configuration-' + profile + '.toml').resolve(strict=True)
     folder = config.parent / 'config.d'
     if not folder.is_dir():
         raise ValueError('profile package did not install its config.d directory')
     dropin = folder / '20-debug.toml'
     dropin.write_text(''.join(f'[{section}]\nenable_debug = {enabled}\nlog_level = "{level}"\n\n'
-                             for section in ('hypervisor.qemu', 'runtime', 'agent.kata'))
+                             for section in (section, 'runtime', 'agent.kata'))
                       + f'debug_console_enabled = {enabled}\n')
     kernel_dropin = folder / '30-kernel-params.toml'
     if debug:
-        base = tomllib.loads(config.read_text())['hypervisor']['qemu'].get('kernel_params', '')
+        base = tomllib.loads(config.read_text())['hypervisor'][hypervisor_name].get('kernel_params', '')
         params = (base + ' agent.log=debug initcall_debug').strip()
-        kernel_dropin.write_text('[hypervisor.qemu]\nkernel_params = ' + json.dumps(params) + '\n')
+        kernel_dropin.write_text('[' + section + ']\nkernel_params = ' + json.dumps(params) + '\n')
         shutil.copyfile(kernel_dropin, output / 'kata-kernel-params.toml')
     else:
         kernel_dropin.unlink(missing_ok=True)
     console_dropin = folder / '40-early-console.toml'
-    if debug:
+    if debug and hypervisor_name == 'qemu':
         qemu = tomllib.loads(config.read_text())['hypervisor']['qemu']['path']
         wrapper = output.resolve() / 'qemu-debug'
         helper = Path(__file__).resolve().with_name('smoke_qemu.py')

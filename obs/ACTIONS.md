@@ -32,8 +32,12 @@ GPU rootfs images are excluded. Guest image/kernel symlink targets are included.
 Required files, archive paths and link boundaries are checked; imported component
 archives are hashed again before assembly. No component is recompiled.
 
+Dragonball uses the integrated Rust VMM, its dedicated experimental kernel and
+the shared generic guest rootfs on both architectures. Its configuration and
+containerd handler are owned by a separate profile package.
+
 The reduced inputs and packaging code become a native Debian source package and
-an RPM spec with fourteen x86_64 packages and eleven aarch64 packages. Both build offline on OBS. Submission uploads to
+an RPM spec with sixteen x86_64 packages and thirteen aarch64 packages. Both build offline on OBS. Submission uploads to
 a staging revision and commits the complete file list atomically with SHA256
 validation. Old filenames are replaced by that revision. Leave package-level SCM
 Sync empty: large binary inputs are uploaded to OBS, not committed to Git.
@@ -101,7 +105,8 @@ fully tested or prunes previous artifacts. Scheduled runs keep the complete matr
 After all four OBS targets build the matching source MD5, both channels call the
 same reusable smoke workflow. Five generic-QEMU x86_64 jobs cover Ubuntu 26.04 with kubeadm,
 k0s, k3s, MicroK8s and RKE2, directly on separate `ubuntu-26.04` hosted runners.
-A sixth job installs only the NVIDIA CPU profile and tests kubeadm with the
+An additional Dragonball job tests normal and debug kubeadm Pods on x86_64.
+The NVIDIA CPU job installs only that profile and tests kubeadm with the
 latest stable upstream containerd. It verifies effective EROFS/dm-verity settings, normal
 and debug Pods, and uses the `kata-nvidia-cpu` handler.
 A seventh job installs NVIDIA GPU packages and verifies dependencies, both installed

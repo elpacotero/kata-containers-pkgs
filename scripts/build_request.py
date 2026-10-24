@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Validate immutable native-package build requests."""
 import re
+from packages import PROFILES
 
 
 def validate_request_version(version):
@@ -18,7 +19,7 @@ def validate_request(request):
     validate_request_version(request.get("package_version", ""))
     profiles = request.get('profiles', ['qemu'])
     if (not isinstance(profiles, list) or not profiles or any(not isinstance(profile, str) for profile in profiles)
-            or len(set(profiles)) != len(profiles) or not set(profiles).issubset({'qemu', 'nvidia-cpu', 'nvidia-gpu', 'nvidia-gpu-tee'})):
+            or len(set(profiles)) != len(profiles) or not set(profiles).issubset(PROFILES)):
         raise ValueError('invalid requested profiles')
     fingerprint = request.get("packaging_fingerprint")
     if fingerprint is not None and not re.fullmatch(r"[0-9a-f]{64}", fingerprint):

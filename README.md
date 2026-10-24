@@ -2,7 +2,7 @@
 
 DEB packages for **Ubuntu 26.04** and native RPM packages for **AlmaLinux 10.2**,
 on x86_64 and aarch64. Only the Rust runtime is shipped; public package names do
-not distinguish runtime implementations. Profiles cover generic QEMU, NVIDIA CPU and NVIDIA GPU workloads, including GPU TEEs on x86_64.
+not distinguish runtime implementations. Profiles cover generic QEMU, Dragonball, NVIDIA CPU and NVIDIA GPU workloads, including GPU TEEs on x86_64.
 
 Automated packaging consumes the binaries upstream already builds:
 
@@ -104,6 +104,26 @@ sudo dnf install -y kata-containers
 
 DNF asks you to trust the OBS project signing key on first use. Keep signature
 checking enabled. DNF selects packages for the host architecture.
+
+### Dragonball profile
+
+After adding your chosen repository, install the Dragonball profile:
+
+```sh
+sudo apt-get install -y kata-containers-dragonball  # Ubuntu
+# Or, on AlmaLinux:
+sudo dnf install -y kata-containers-dragonball
+```
+
+Dragonball is integrated into the shared Rust shim. The profile installs its
+configuration and dedicated upstream experimental guest kernel, reusing the
+generic measured rootfs. Its inline virtio-fs needs no external virtiofsd or QEMU.
+Use RuntimeClass handler `kata-dragonball` and run `kata-containers-setup` for
+your Kubernetes distribution as described below. Profiles can coexist.
+
+Packages support x86_64 and aarch64. Ubuntu x86_64 CI runs normal and debug
+kubeadm smoke Pods. ARM64 packages are built; ARM64 and AlmaLinux workloads
+remain outside the hosted smoke matrix.
 
 ### NVIDIA CPU profile
 
@@ -236,6 +256,8 @@ virtualization must be available on each node running Kata workloads.
 | `kata-containers-kernel-generic` | Generic guest kernel |
 | `kata-containers-virtiofsd` | Shared virtio-fs daemon |
 | `kata-containers-qemu` | QEMU, firmware, configuration and profile-owned containerd registration |
+| `kata-containers-dragonball` | Integrated Dragonball configuration and containerd registration |
+| `kata-containers-kernel-dragonball` | Dedicated upstream experimental Dragonball guest kernel |
 | `kata-containers-rootfs-nvidia` | NVIDIA base guest root filesystem |
 | `kata-containers-kernel-nvidia` | NVIDIA guest kernel |
 | `kata-containers-nvidia-cpu` | QEMU without shared filesystems, NVIDIA CPU configuration and EROFS registration |
@@ -273,7 +295,7 @@ revision and the appropriate distribution suffix. Development uses DEB `0.0.0-0.
 `0.0.0` and Release `0.RUN.ATTEMPT.el10`. Stable releases use separate OBS source
 packages named `kata-containers-VERSION` in the stable project, retaining previous
 versions without changing the installed package names. Upstream's embedded
-binary version remains unchanged. Other VMMs and ELRepo integration are deferred.
+binary version remains unchanged. Additional VMMs and ELRepo integration are deferred.
 
 ## Validation
 

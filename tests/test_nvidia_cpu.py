@@ -88,7 +88,7 @@ class NvidiaAssets(unittest.TestCase):
         selected = packages.installed_packages('nvidia-cpu')
         self.assertEqual(set(selected), {'kata-containers-core', 'kata-containers-nvidia-cpu',
                                         'kata-containers-rootfs-nvidia', 'kata-containers-kernel-nvidia'})
-        self.assertEqual(len(packages.build_packages()), 14)
+        self.assertEqual(len(packages.build_packages()), 16)
         self.assertEqual(set(packages.build_packages(['qemu'])), set(packages.GENERIC_PACKAGES))
 
     def test_rpm_declares_cpu_dependencies_and_module_loading(self):

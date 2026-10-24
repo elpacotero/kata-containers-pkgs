@@ -214,7 +214,7 @@ class ReleaseSmokeCoordination(unittest.TestCase):
         upstream = {'kind': 'release', 'source_ref': 'refs/tags/4.2.0',
                     'source_revision': A, 'url': 'https://github.com/example/release',
                     'bundles': {}}
-        previous = dict(request(), upstream=upstream, targets=TARGETS, package_version='4.2.0-4', profiles=['qemu','nvidia-cpu','nvidia-gpu','nvidia-gpu-tee'],
+        previous = dict(request(), upstream=upstream, targets=TARGETS, package_version='4.2.0-4', profiles=list(ci.PROFILES),
                         packaging_fingerprint='d' * 64)
         client = FakeOBS()
         client.current = previous
@@ -511,8 +511,8 @@ class HostedMatrix(unittest.TestCase):
         import smoke_vm
         targets = json.loads((ci.ROOT / 'obs/ci.json').read_text())['targets']
         matrix = ci.smoke_matrix(targets)['include']
-        self.assertEqual(len(matrix), 8)
-        self.assertEqual(len({(t['id'], t['k8s_distro'], t['profile']) for t in matrix}), 8)
+        self.assertEqual(len(matrix), 9)
+        self.assertEqual(len({(t['id'], t['k8s_distro'], t['profile']) for t in matrix}), 9)
         self.assertTrue(all(t['repository'] == 'Ubuntu_26.04' for t in matrix))
         self.assertTrue(any(t['format'] == 'rpm' for t in targets))
         for target in matrix:

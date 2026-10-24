@@ -18,6 +18,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 from build_request import validate_request, validate_request_version
+from packages import PROFILES
 
 ROOT = Path(__file__).resolve().parent.parent
 SUCCESS = {"succeeded", "succeed"}
@@ -288,7 +289,7 @@ def output(name, value):
             stream.write(f"{name}={value}\n")
 
 
-def smoke_matrix(targets, selection=None, profiles=("qemu", "nvidia-cpu", "nvidia-gpu", "nvidia-gpu-tee")):
+def smoke_matrix(targets, selection=None, profiles=tuple(PROFILES)):
     from kubernetes import DISTROS
     jobs = [dict(target, profile=profile, test_kind="installation" if profile in ("nvidia-gpu", "nvidia-gpu-tee") else "workload", k8s_distro=distro, execution="direct" if target["format"] == "deb" else "vm",
                  runner="ubuntu-26.04" if target["format"] == "deb" else "ubuntu-24.04")
@@ -348,7 +349,7 @@ def main():
         'package_version': package_version(args.channel, upstream['source_ref'], config['package_version'], run_id, attempt, config.get('release_revisions')),
         'request_id': f'{args.channel}-{run_id}-{attempt}-{upstream["source_revision"]}',
         'created': datetime.now(timezone.utc).isoformat(), 'targets': targets,
-        'profiles': ['qemu', 'nvidia-cpu', 'nvidia-gpu', 'nvidia-gpu-tee']})
+        'profiles': list(PROFILES)})
     if args.rebuild_version and (args.channel != 'release' or args.rebuild_version != request['package_version']):
         raise ValueError('--rebuild-version must exactly match the latest stable package version')
     if not args.prepare and not args.rebuild_version:

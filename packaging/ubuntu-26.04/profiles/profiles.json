@@ -15,6 +15,18 @@
       "vhost_vsock"
     ]
   },
+  "dragonball": {
+    "architectures": ["amd64", "arm64"],
+    "handler": "kata-dragonball",
+    "hypervisor": "dragonball",
+    "upstream_configuration": "configuration-dragonball.toml",
+    "extra_dependencies": [
+      "kata-containers-rootfs-generic (= ${binary:Version})",
+      "kata-containers-kernel-dragonball (= ${binary:Version})"
+    ],
+    "assets": "Integrated Dragonball VMM configuration and containerd registration",
+    "modules": ["vhost_vsock"]
+  },
   "nvidia-cpu": {
     "architectures": [
       "amd64",

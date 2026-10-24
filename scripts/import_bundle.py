@@ -63,6 +63,9 @@ def component_members(index, architecture, profiles=("qemu", "nvidia-cpu", "nvid
             components['kernel-nvidia-gpu'].add(base + 'vmlinux-nvidia-gpu.container')
         components['qemu-no-shared-fs'].update(name for name in index if name.startswith(
             ('opt/kata/share/kata-qemu-no-shared-fs/', 'opt/kata/lib/kata-qemu-no-shared-fs/')))
+    if 'dragonball' in profiles:
+        components['shim-v2-rust'].add('opt/kata/share/defaults/kata-containers/runtime-rs/configuration-dragonball.toml')
+        components['kernel-dragonball-experimental'] = {base + 'vmlinux-dragonball-experimental.container'}
     if 'nvidia-gpu' in profiles:
         components['shim-v2-rust'].add('opt/kata/share/defaults/kata-containers/runtime-rs/configuration-qemu-nvidia-gpu-runtime-rs.toml')
         components['rootfs-image-nvidia-gpu-extension'] = {

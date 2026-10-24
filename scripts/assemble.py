@@ -14,16 +14,17 @@ import tarfile
 import tempfile
 import tomllib
 from elf_dependencies import dependencies
-from packages import PROFILES, profiles_for_arch, profile_configurations
+from packages import PROFILES, profiles_for_arch, profile_configurations, profile_hypervisor
 
 HERE = Path(__file__).resolve().parent
 PACKAGING = HERE.parent / "packaging/ubuntu-26.04"
-PAYLOADS = {"qemu": ("qemu", "ovmf"), "nvidia-cpu": ("qemu-no-shared-fs",), "nvidia-gpu": ("ovmf",),
+PAYLOADS = {"qemu": ("qemu", "ovmf"), "dragonball": (), "nvidia-cpu": ("qemu-no-shared-fs",), "nvidia-gpu": ("ovmf",),
             "nvidia-gpu-tee": ("qemu-snp-experimental", "qemu-tdx-experimental", "ovmf-sev", "ovmf-tdx")}
 SHARED = {
     "rootfs-coco": ("rootfs-image-coco-extension", "Kata Containers confidential-computing guest extension"),
     "rootfs-generic": ("rootfs-image", "Kata Containers generic guest root filesystem"),
     "kernel-generic": ("kernel", "Kata Containers generic guest kernel"),
+    "kernel-dragonball": ("kernel-dragonball-experimental", "Kata Containers Dragonball guest kernel"),
     "virtiofsd": ("virtiofsd", "Kata Containers shared virtio-fs daemon"),
     "rootfs-nvidia": ("rootfs-image-nvidia", "Kata Containers NVIDIA base guest root filesystem"),
     "kernel-nvidia": ("kernel-nvidia-gpu", "Kata Containers NVIDIA guest kernel"),
@@ -76,6 +77,18 @@ def stage_gpu_firmware(root, config):
     # It ships a single firmware image, with no separate NV variable store.
     text = text.replace('"@FIRMWAREVOLUMEPATH_NV@"', '""')
     config.write_text(text)
+
+
+def stage_guest_verity(config, hypervisor, measurement):
+    # Some upstream VMM templates omit the generic measured-image parameters.
+    text = config.read_text()
+    current = tomllib.loads(text)['hypervisor'][hypervisor].get('kernel_verity_params')
+    if current is None:
+        header = '[hypervisor.' + hypervisor + ']'
+        text = text.replace(header, header + '\nkernel_verity_params = ' + json.dumps(measurement), 1)
+        config.write_text(text)
+    elif current.strip() != measurement:
+        raise ValueError('guest image/config verity measurement mismatch: ' + hypervisor)
 
 
 def validate_gpu_extension(hypervisor, stage, coco_stage=None):
@@ -227,7 +240,12 @@ def main():
                 extract(args.build / f"kata-static-{component}.tar.zst", stage)
             for configuration in profile_configurations(profile):
                 config_name = 'qemu' if configuration == 'qemu' else 'qemu-' + configuration
-                config = stage_runtime_config(configs / f'configuration-{config_name}-runtime-rs.toml', stage, configuration)
+                filename = PROFILES[profile].get('upstream_configuration', f'configuration-{config_name}-runtime-rs.toml')
+                config = stage_runtime_config(configs / filename, stage, configuration)
+                if profile == 'dragonball':
+                    measurement = (stages['kata-containers-rootfs-generic'] /
+                                   'opt/kata/share/kata-containers/root_hash_base.txt').read_text().strip()
+                    stage_guest_verity(config, profile_hypervisor(profile), measurement)
                 if profile == 'nvidia-gpu':
                     stage_gpu_firmware(stage, config)
             subprocess.run(["python3", str(HERE / "stage_profile.py"), profile, "--root", str(stage),
@@ -241,11 +259,11 @@ def main():
                 text = config.read_text()
                 if re.search(r"@[A-Z][A-Z0-9_]*@", text):
                     raise ValueError(f"unresolved configuration substitutions: {profile}")
-                hypervisor = tomllib.loads(text)["hypervisor"]["qemu"]
+                hypervisor = tomllib.loads(text)["hypervisor"][profile_hypervisor(profile)]
                 measurement = 'root_hash_nvidia.txt' if profile.startswith('nvidia-') else 'root_hash_base.txt'
                 image_stage = stages['kata-containers-rootfs-' + ('nvidia' if profile.startswith('nvidia-') else 'generic')]
                 expected_measurement = (image_stage / 'opt/kata/share/kata-containers' / measurement).read_text().strip()
-                if profile.startswith('nvidia-') and hypervisor.get('kernel_verity_params', '').strip() != expected_measurement:
+                if (profile.startswith('nvidia-') or profile == 'dragonball') and hypervisor.get('kernel_verity_params', '').strip() != expected_measurement:
                     raise ValueError(f'guest image/config verity measurement mismatch: {profile}')
                 if profile in ('nvidia-gpu', 'nvidia-gpu-tee'):
                     validate_gpu_extension(hypervisor, stages['kata-containers-rootfs-nvidia-gpu'],

@@ -12,7 +12,7 @@ import tempfile
 import tomllib
 
 from validate import PACKAGES, validate_tee
-from packages import build_packages, installed_packages, PROFILES, profile_handlers, profile_configurations, profiles_for_arch
+from packages import build_packages, installed_packages, PROFILES, profile_handlers, profile_configurations, profiles_for_arch, profile_hypervisor
 
 
 def run(*command):
@@ -60,20 +60,22 @@ def main():
         assert installed[name] == version
         assert not run("rpm", "-V", name).strip(), f"installed files changed: {name}"
         requirements[name] = run("rpm", "-qR", name).splitlines()
-    binaries = {'shim': '/opt/kata/bin/containerd-shim-kata-v2',
-                'qemu': '/opt/kata/bin/qemu-system-' + platform.machine() +
-                        ('-no-shared-fs' if args.profile.startswith('nvidia-') else '')}
-    if args.profile == 'qemu':
-        binaries['virtiofsd'] = '/opt/kata/libexec/virtiofsd'
+    profile = Path('/opt/kata/share/defaults/kata-containers/configuration-' + profile_configurations(args.profile)[0] + '.toml')
+    hypervisor = tomllib.loads(profile.read_text())['hypervisor'][profile_hypervisor(args.profile)]
+    binaries = {'shim': '/opt/kata/bin/containerd-shim-kata-v2'}
+    if hypervisor.get('path'):
+        binaries[profile_hypervisor(args.profile)] = hypervisor['path']
+    if hypervisor.get('virtio_fs_daemon') and hypervisor.get('shared_fs') == 'virtio-fs':
+        binaries['virtiofsd'] = hypervisor['virtio_fs_daemon']
     if args.profile == 'nvidia-gpu-tee':
-        binaries['qemu'] = '/opt/kata/bin/qemu-system-x86_64-snp-experimental'
         binaries['qemu-tdx'] = '/opt/kata/bin/qemu-system-x86_64-tdx-experimental'
-    outputs = {name: run(path, '--version') for name, path in binaries.items()}
-    profile = '/opt/kata/share/defaults/kata-containers/configuration-' + profile_configurations(args.profile)[0] + '.toml'
-    hypervisor = tomllib.loads(Path(profile).read_text())["hypervisor"]["qemu"]
+    outputs = {name: run(path, '--version').strip() for name, path in binaries.items()}
     expected = {"path": "kata-containers-qemu", "kernel": "kata-containers-kernel-generic",
                 "image": "kata-containers-rootfs-generic", "virtio_fs_daemon": "kata-containers-virtiofsd",
                 "firmware": "kata-containers-qemu", "firmware_volume": "kata-containers-qemu"}
+    if args.profile == 'dragonball':
+        expected = {'kernel': 'kata-containers-kernel-dragonball',
+                    'image': 'kata-containers-rootfs-generic'}
     if args.profile.startswith('nvidia-'):
         expected.update(path='kata-containers-nvidia-cpu', kernel='kata-containers-kernel-nvidia',
                         image='kata-containers-rootfs-nvidia')
@@ -102,7 +104,7 @@ def main():
     runtimes = config["plugins"]["io.containerd.cri.v1.runtime"]["containerd"]["runtimes"]
     present = [p for p in PROFILES if Path("/usr/share/kata-containers/installed-profiles/" + p + ".json").is_file()]
     assert {name for name in runtimes if name.startswith("kata")} == {handler for p in present for handler in profile_handlers(p)}
-    assert runtimes[PROFILES[args.profile]["handler"]]["options"]["ConfigPath"] == profile
+    assert runtimes[PROFILES[args.profile]["handler"]]["options"]["ConfigPath"] == str(profile)
     assert "cri" not in config.get("disabled_plugins", []), "the installed CRI plugin is disabled"
     if 'nvidia-gpu-tee' in present:
         validate_tee(config, lambda path: run('rpm', '-qf', '--qf', '%{NAME}', path))

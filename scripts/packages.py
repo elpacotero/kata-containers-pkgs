@@ -13,6 +13,9 @@ def profile_handlers(profile):
 def profile_configurations(profile):
     return PROFILES[profile].get('configurations', [profile])
 
+def profile_hypervisor(profile):
+    return PROFILES[profile].get('hypervisor', 'qemu')
+
 def profiles_for_arch(architecture):
     architecture = {'x86_64': 'amd64', 'aarch64': 'arm64'}.get(architecture, architecture)
     return tuple(name for name, profile in PROFILES.items() if architecture in profile['architectures'])

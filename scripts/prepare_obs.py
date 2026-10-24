@@ -25,6 +25,8 @@ DESCRIPTIONS = {'kata-containers-core': 'Kata Containers Rust shim and host inte
                 'kata-containers-kernel-generic': 'Kata Containers generic guest kernel',
                 'kata-containers-virtiofsd': 'Kata Containers virtio-fs daemon',
                 'kata-containers-qemu': 'Kata Containers QEMU profile and firmware',
+                'kata-containers-dragonball': 'Kata Containers integrated Dragonball profile',
+                'kata-containers-kernel-dragonball': 'Kata Containers Dragonball guest kernel',
                 'kata-containers': 'Kata Containers default QEMU installation',
                 'kata-containers-nvidia-cpu': 'Kata Containers NVIDIA CPU QEMU profile',
                 'kata-containers-rootfs-nvidia': 'Kata Containers NVIDIA base guest root filesystem',
